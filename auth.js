@@ -1,5 +1,6 @@
 const passport = require("passport");
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
+const pool = require("./db.js");
 require("dotenv").config();
 
 passport.serializeUser((user, done) => {
@@ -23,27 +24,52 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback",
     },
-    (_, __, profile, cb) => {
+    async (_, __, profile, done) => {
       // make account in database
-      console.log(profile._json);
+
+      const account = profile._json;
+      let user = null;
+
+      try {
+        // check if exists
+        const result = await pool.query(
+          "SELECT id, fullname FROM users WHERE users.google_id=$1",
+          [account.sub]
+        );
+
+        if (result.rows.length < 1) {
+          // account non-existent
+          await pool.query(
+            "INSERT INTO users (fullname, img, google_id) VALUES($1,$2,$3)",
+            [account.name, account.picture, account.sub]
+          );
+
+          const newAccId = await pool.query(
+            "SELECT id FROM users WHERE users.google_id=$1",
+            [account.sub]
+          );
+
+          user = {
+            id: newAccId,
+            name: account.name,
+            img_url: account.picture,
+          };
+        } else {
+          user = {
+            id: result.rows[0].id,
+            name: result.rows[0].fullname,
+            img_url: account.picture,
+          };
+        }
+      } catch (err) {
+        done(err);
+      }
+      done(null, user);
 
       // whatever user is retuned here,
       // is sent to serializeUser() to be set to the session store
     }
   )
 );
-
-// const q = async () => {
-//   try {
-//     const name = "Michael Scorn";
-
-//     await pool.query("INSERT INTO users (fullname) VALUES($1) RETURNING *", [
-//       name,
-//     ]);
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-// q();
 
 module.exports = passport;

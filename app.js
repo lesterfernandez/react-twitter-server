@@ -1,11 +1,10 @@
-// Runs passport auth setup
-require("./auth.js");
-
 require("dotenv").config();
-const passport = require("passport");
 const cors = require("cors");
 const express = require("express");
 const session = require("express-session");
+const passport = require("passport");
+// Runs passport auth setup
+require("./auth.js");
 const app = express();
 
 // Allows body to be parsed as json
