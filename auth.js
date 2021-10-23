@@ -14,7 +14,8 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   // user is req.session.passport.user
   // whatever is returned here is put into req.user for further usage
-  console.log("deserialize", user);
+
+  // console.log("deserialize", user);
   done(null, user);
 });
 
