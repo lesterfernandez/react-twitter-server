@@ -12,6 +12,9 @@ app.use(express.json());
 
 // Allows cookies to be sent to url on different domain
 app.use(cors({ origin: process.env.CLIENT_ROOT, credentials: true }));
+app.set("trust proxy", 1); // if behind proxy
+
+const inProd = process.env.ENVIRONMENT === "PROD";
 
 app.use(
   session({
@@ -19,16 +22,14 @@ app.use(
     resave: true, // resave cookies even if nothing changed
     saveUninitialized: false,
     cookie: {
-      sameSite: "none", // cross site
-      secure: true, // only https
+      sameSite: `${inProd ? "none" : "lax"}`, // cross site // set lax while working with http:localhost, but none when in prod
+      secure: `${inProd ? "true" : "auto"}`, // only https, auto when dev, true when prod
       maxAge: 1000 * 60 * 60 * 24 * 14, // expiration time
     },
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
-// app.set("trust proxy", 1); // if behind proxy
 
 const indexRouter = require("./routes/indexRouter.js");
 app.use("/", indexRouter);

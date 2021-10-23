@@ -14,6 +14,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   // user is req.session.passport.user
   // whatever is returned here is put into req.user for further usage
+  console.log("deserialize", user);
   done(null, user);
 });
 
@@ -37,7 +38,7 @@ passport.use(
           [account.sub]
         );
 
-        if (result.rows.length < 1) {
+        if (result.rows.length === 0) {
           // account non-existent
           await pool.query(
             "INSERT INTO users (fullname, img, google_id) VALUES($1,$2,$3)",

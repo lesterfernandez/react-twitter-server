@@ -1,6 +1,7 @@
 const isAuth = (req, res, next) => {
-  if (req.user.id) next();
-  else res.status(301);
+  if (req.user) {
+    next();
+  } else res.status(301).redirect(process.env.CLIENT_ROOT);
 };
 
 module.exports = isAuth;
