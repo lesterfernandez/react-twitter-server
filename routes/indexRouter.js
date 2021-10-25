@@ -3,7 +3,11 @@ const isAuth = require("../isAuth");
 const router = express.Router();
 
 router.get("/account", isAuth, (req, res) => {
-  res.send(req.user);
+  const user = {
+    ...req.user,
+    loggedIn: true,
+  };
+  res.send(user);
 });
 
 router.get("/logout", isAuth, (req, res) => {
