@@ -15,4 +15,9 @@ router.get("/logout", isAuth, (req, res) => {
   res.send("User logged out");
 });
 
+router.post("/new_post", isAuth, (req, res) => {
+  // new post here
+  console.log(req.body);
+});
+
 module.exports = router;
