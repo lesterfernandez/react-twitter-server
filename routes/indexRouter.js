@@ -1,6 +1,7 @@
 const express = require("express");
 const isAuth = require("../isAuth");
 const router = express.Router();
+const pool = require("../db.js");
 
 router.get("/account", isAuth, (req, res) => {
   const user = {
@@ -15,9 +16,20 @@ router.get("/logout", isAuth, (req, res) => {
   res.send("User logged out");
 });
 
-router.post("/new_post", isAuth, (req, res) => {
+router.post("/new_post", isAuth, async (req, res) => {
   // new post here
-  console.log(req.body);
+  await pool.query("INSERT INTO posts (post_author, body) VALUES($1, $2)", [
+    req.user.id,
+    req.body.post,
+  ]);
+  const newFeed = await pool.query(
+    "SELECT u.fullname, p.body FROM users u INNER JOIN posts p on u.id = p.post_author"
+  );
+  const result = {
+    posts: newFeed.rows,
+  };
+  // console.log(result);
+  res.json(result);
 });
 
 module.exports = router;

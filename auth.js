@@ -52,7 +52,7 @@ passport.use(
           );
 
           user = {
-            id: newAccId,
+            id: newAccId.rows[0].id,
             name: account.name,
             img_url: account.picture,
           };
