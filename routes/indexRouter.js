@@ -18,15 +18,22 @@ router.get("/logout", isAuth, (req, res) => {
 
 router.post("/new_post", isAuth, async (req, res) => {
   // new post here
+  console.log("Post is: ", req.body.post);
   await pool.query("INSERT INTO posts (post_author, body) VALUES($1, $2)", [
     req.user.id,
     req.body.post,
   ]);
-  const newFeed = await pool.query(
+  // res.status(200).send();
+  res.status(200).send();
+});
+
+router.get("/feed", isAuth, async (req, res) => {
+  // get feed
+  const feed = await pool.query(
     "SELECT u.fullname, p.body FROM users u INNER JOIN posts p on u.id = p.post_author"
   );
   const result = {
-    posts: newFeed.rows,
+    posts: feed.rows,
   };
   // console.log(result);
   res.json(result);
