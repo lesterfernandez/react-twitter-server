@@ -39,11 +39,10 @@ CREATE TABLE posts (
 -- new post 
 INSERT INTO posts (post_author, body) VALUES(userid, bodyofpost);
 
--- get feed 
-SELECT u.fullname, u.img, p.body 
-FROM users u INNER JOIN posts p ON u.id = p.post_author;
+-- get feed
+SELECT u.fullname, u.img, p.body FROM users u INNER JOIN posts p on u.id = p.post_author LIMIT 5 OFFSET {nextMin};
 
 -- get posts user has posted
 SELECT u.fullname, u.img, p.body 
-FROM users u INNER JOIN posts p ON u.id = p.post_author
-WHERE p.post_author = {userid};
+FROM users u INNER JOIN posts p on u.id = p.post_author 
+WHERE p.post_author = {userid} LIMIT 5 OFFSET {min} 
