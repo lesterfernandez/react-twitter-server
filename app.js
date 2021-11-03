@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors({ origin: process.env.CLIENT_ROOT, credentials: true }));
 app.set("trust proxy", 1); // if behind proxy
 
-const inProd = process.env.ENVIRONMENT === "PROD";
+const inProd = process.env.NODE_ENV === "production";
 
 app.use(
   session({
