@@ -32,7 +32,7 @@ router.get("/feed", isAuth, async (req, res) => {
 
   // get feed
   const feed = await pool.query(
-    "SELECT u.fullname, u.img, p.body FROM users u INNER JOIN posts p on u.id = p.post_author LIMIT 5 OFFSET $1",
+    "SELECT u.fullname, u.img, p.body FROM users u INNER JOIN posts p on u.id = p.post_author ORDER BY p.id DESC LIMIT 5 OFFSET $1",
     [currentMin]
   );
   const result = {
@@ -48,7 +48,7 @@ router.get("/my_posts", isAuth, async (req, res) => {
   const nextMin = currentMin * 1 + 5;
 
   const feed = await pool.query(
-    "SELECT u.fullname, u.img, p.body FROM users u INNER JOIN posts p on u.id = p.post_author WHERE p.post_author = $1 LIMIT 5 OFFSET $2",
+    "SELECT u.fullname, u.img, p.body FROM users u INNER JOIN posts p on u.id = p.post_author WHERE p.post_author = $1 ORDER BY p.id DESC LIMIT 5 OFFSET $2",
     [req.user.id, currentMin]
   );
   const result = {
