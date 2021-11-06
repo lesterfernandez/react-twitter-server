@@ -25,8 +25,8 @@ app.use(
       // sameSite: `${inProd ? "none" : "lax"}`, // cross site // set lax while working with http:localhost, but none when in prod
       // secure: `${inProd ? "true" : "auto"}`, // only https, auto when dev, true when prod
       maxAge: 1000 * 60 * 60 * 24 * 14, // expiration time
-      sameSite: "lax",
-      secure: "auto",
+      sameSite: "none",
+      secure: "true",
     },
   })
 );
