@@ -10,6 +10,9 @@
   },
   "scripts": {
     "dev": "nodemon app.js",
-    "prod": "node app.js"
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": "14.17.6"
   }
 }
