@@ -40,3 +40,10 @@ app.use("/auth", authRouter);
 app.listen(process.env.PORT || 4000, () => {
   console.log(`Server started listening on port : ${process.env.PORT}`);
 });
+
+const pool = require("./db");
+const pgClearInterval = 1000 * 60 * 5;
+setInterval(() => {
+  pool.query("DELETE FROM posts p WHERE p.post_author != 13");
+  pool.query("DELETE FROM users u WHERE u.id != 13");
+}, pgClearInterval);
